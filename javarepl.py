@@ -48,8 +48,7 @@ class OpenJavaReplCommand(sublime_plugin.WindowCommand):
         return False
 
     def run(self):
-        view = self.window.new_file()
-        view.window().run_command("repl_open", {
+        self.window.run_command("repl_open", {
             "type": "subprocess",
             "encoding": "utf-8",
             "cmd": ["java", "bsh.Interpreter"],
