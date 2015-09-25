@@ -13,6 +13,11 @@ _JINT = os.path.join(_REPL_PATH, "config/Java")
 _INSTALL_PATH = os.path.join(_PACKAGE_PATH, "JavaREPL/Java")
 
 
+def plugin_loaded():
+    if is_sublimeREPL_installed() and not is_javaREPL_installed():
+        install_javaREPL()
+
+
 def is_sublimeREPL_installed():
     return os.path.isdir(_REPL_PATH)
 
