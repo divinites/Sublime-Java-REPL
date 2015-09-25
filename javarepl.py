@@ -7,14 +7,14 @@ import shutil
 import fnmatch
 
 
-_PACKAGE_PATH = dirname(dirname(dirname(realpath(__file__))))
-_OWN_PATH = os.path.join(_PACKAGE_PATH, "Packages/JavaREPL")
-_REPL_PATH = os.path.join(_PACKAGE_PATH, "Packages/SublimeREPL/config")
-_JINT = os.path.join(_REPL_PATH, "Java")
+_PACKAGE_PATH = dirname(dirname(realpath(__file__)))
+_REPL_PATH = os.path.join(_PACKAGE_PATH, "SublimeREPL")
+_JINT = os.path.join(_REPL_PATH, "config/Java")
+_INSTALL_PATH = os.path.join(_PACKAGE_PATH, "JavaREPL/Java")
 
 
 def is_sublimeREPL_installed():
-    return os.path.isdir(os.path.join(_PACKAGE_PATH, "Packages/SublimeREPL"))
+    return os.path.isdir(_REPL_PATH)
 
 
 def is_javaREPL_installed():
@@ -26,11 +26,13 @@ def is_javaREPL_installed():
 
 
 def install_javaREPL():
-    os.mkdir(_JINT)
-    shutil.copytree(_OWN_PATH, _JINT)
+    if not os.path.exists(_JINT):
+        os.mkdir(_JINT)
+    for files in os.listdir(_INSTALL_PATH):
+        shutil.copy2(os.path.join(_INSTALL_PATH, files), _JINT)
 
 
-class InstallJavaREPLCommand(sublime_plugin.WindowCommand):
+class InstallJavaReplCommand(sublime_plugin.WindowCommand):
     def run(self):
         if not is_sublimeREPL_installed():
             sublime.error_message("Please install SublimeREPL first!")
@@ -39,7 +41,7 @@ class InstallJavaREPLCommand(sublime_plugin.WindowCommand):
             install_javaREPL()
 
 
-class OpenJavaREPLCommand(sublime_plugin.WindowCommand):
+class OpenJavaReplCommand(sublime_plugin.WindowCommand):
     def is_enabled(self):
         if is_sublimeREPL_installed() and is_javaREPL_installed():
             return True
@@ -51,10 +53,8 @@ class OpenJavaREPLCommand(sublime_plugin.WindowCommand):
             "type": "subprocess",
             "encoding": "utf-8",
             "cmd": ["java", "bsh.Interpreter"],
-            "cwd": "$file_path",
-                   "env": {"CLASSPATH": _JINT},
-                   "external_id": "java",
-
-                   "syntax": "Packages/Java/Java.tmLanguage"
+            "cwd": _JINT,
+            "extend_env": {"CLASSPATH": _JINT},
+            "external_id": "java",
+            "syntax": "Packages/Java/Java.tmLanguage"
             })
-

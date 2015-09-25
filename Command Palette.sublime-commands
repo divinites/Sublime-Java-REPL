@@ -1,0 +1,12 @@
+[
+    {
+        "caption": "JavaREPL: Install", 
+        "args": {}, 
+        "command": "install_java_repl"
+    }, 
+    {
+        "caption": "JavaREPL: Start", 
+        "args": {}, 
+        "command": "open_java_repl"
+    }
+]
